@@ -25,6 +25,9 @@ public class Curso implements Serializable {
     
     @Column(nullable = false, length = 200)
     private String descricao;
+    
+    @Column(nullable = true)
+    private Integer cargaHoraria;
 
     public Curso() {
     }
@@ -44,6 +47,14 @@ public class Curso implements Serializable {
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
+
+    public Integer getCargaHoraria() {
+        return cargaHoraria;
+    }
+
+    public void setCargaHoraria(Integer cargaHoraria) {
+        this.cargaHoraria = cargaHoraria;
+    }
     
-    
+
 }

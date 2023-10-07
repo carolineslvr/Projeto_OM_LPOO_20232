@@ -132,7 +132,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
                     if (rs2.next()) {
                         dt.setTimeInMillis(rs2.getDate("data_admmissao").getTime());
-                        func.setData_admmissao(dt);
+                        func.setData_admissao(dt);
                         dt.setTimeInMillis(rs2.getDate("data_demissao").getTime());
                         func.setData_demissao(dt);
                         func.setNumero_ctps(rs2.getString("numero_ctps"));
@@ -458,7 +458,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             Funcionario func = (Funcionario) o;
 
             //verificar a acao: insert ou update.
-            if (func.getData_admmissao() == null) {
+            if (func.getTipo() == null) {
                 //insert tb_pessoa
                 PreparedStatement ps
                         = this.con.prepareStatement("insert into tb_pessoa (tipo,cpf,data_nascimento,nome,senha) values "
@@ -481,7 +481,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 //insert em tb_funcionario
                 PreparedStatement ps2
                         = this.con.prepareStatement("insert into tb_funcionario values "
-                                + "(now(), null, ?, ?, ?) returning data_admmissao");
+                                + "(now(), null, ?, ?, ?) returning data_admissao");
                 ps2.setString(1, func.getNumero_ctps());
                 ps2.setString(2, func.getCpf());
                 ps2.setInt(3, func.getCargo().getId());
@@ -493,8 +493,8 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 if (rs2.next()) {
 
                     Calendar dt_adm = Calendar.getInstance();
-                    dt_adm.setTimeInMillis(rs2.getDate("data_admmissao").getTime());
-                    func.setData_admmissao(dt_adm);
+                    dt_adm.setTimeInMillis(rs2.getDate("data_admissao").getTime());
+                    func.setData_admissao(dt_adm);
 
                     //se necessário o insert em tb_funcionario_curso
                     if (func.getCursos() != null) {
@@ -547,12 +547,13 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         = this.con.prepareStatement("update tb_funcionario set data_demissao = ?, "
                                 + "numero_ctps = ?, "
                                 + "cargo_id = ?"
-                                + "where cpf = ? ");
+                                + " where cpf = ?");
                 //setar os demais campos e parametros.
 
-                ps2.setDate(1, new java.sql.Date(func.getData_demissao().getTimeInMillis()));
+               // ps2.setDate(1, new java.sql.Date(func.getData_demissao().getTimeInMillis()));
+                ps2.setDate(1, null);
                 ps2.setString(2, func.getNumero_ctps());
-                ps2.setInt(3, func.getCargo().getId());
+                 ps2.setInt(3, func.getCargo().getId());
                 ps2.setString(4, func.getCpf());
 
                 ps2.execute();

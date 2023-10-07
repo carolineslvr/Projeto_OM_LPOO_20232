@@ -11,6 +11,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -22,6 +24,7 @@ import javax.persistence.TemporalType;
 @Entity
 @DiscriminatorValue("F")
 @Table(name = "tb_funcionario")
+@NamedQueries({@NamedQuery(name="Funcionario.orderbynome", query="select f from Funcionario f order by f.nome asc")})
 public class Funcionario extends Pessoa {
     
     
@@ -30,7 +33,7 @@ public class Funcionario extends Pessoa {
     
     @Column(nullable = false)
     @Temporal(TemporalType.DATE)  
-    private Calendar data_admmissao;
+    private Calendar data_admissao;
       
     @Column(nullable = true)
     @Temporal(TemporalType.DATE)    
@@ -82,12 +85,12 @@ public class Funcionario extends Pessoa {
         this.numero_ctps = numero_ctps;
     }
 
-    public Calendar getData_admmissao() {
-        return data_admmissao;
+    public Calendar getData_admissao() {
+        return data_admissao;
     }
 
-    public void setData_admmissao(Calendar data_admmissao) {
-        this.data_admmissao = data_admmissao;
+    public void setData_admissao(Calendar data_admissao) {
+        this.data_admissao = data_admissao;
     }
 
     public Calendar getData_demissao() {

@@ -1,8 +1,12 @@
 package br.edu.ifsul.bcc.lpoo.om.test;
 
 import br.edu.ifsul.bcc.lpoo.om.model.Cargo;
+import br.edu.ifsul.bcc.lpoo.om.model.Curso;
+import br.edu.ifsul.bcc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.bcc.lpoo.om.model.Veiculo;
 import br.edu.ifsul.bcc.lpoo.om.model.dao.PersistenciaJPA;
+import java.util.Calendar;
+import java.util.Collection;
 import org.junit.Test;
 
 /**
@@ -72,16 +76,83 @@ public class TestPersistenciaJPA {
         }
     }
 
-    //Exercício 31/08
-    /*
-       Criar um método de teste para funcionario
-         Passo 1: recuperar a coleção de funcionarios.
-         Passo 2: caso a coleção não esteja vazia - imprimir (inclusive os cursos), 
-                  alterar e remover cada item.
-         Passo 3: caso a coleção esteja vazia, criar dois funcionarios com um Curso cada.
-     */
-
-  //@Test
+    //@Test
+    public void testPersistenciaListaFuncionarios() throws Exception {
+        PersistenciaJPA jpa = new PersistenciaJPA();
+        
+        if(jpa.conexaoAberta()){
+           
+            Collection <Funcionario> lista = jpa.listFuncionarios();
+           
+           if (!lista.isEmpty()){
+               
+                for (Funcionario funcionario : lista){
+                   System.out.println("Funcionário ID: " + funcionario.getCpf() + " Nome: " +
+                           funcionario.getNome() + " Cursos: " + funcionario.getCursos() + "\n");
+                   
+                    funcionario.setNome("Joao");
+                    jpa.persist(funcionario);
+                    System.out.println("Nome funcionário alterados para: " + funcionario.getNome());
+                    jpa.remover(funcionario);
+                    System.out.println("Cargo: " + funcionario.getCpf() + " removido.");
+               }
+           } else {
+               
+               Curso curso1 = new Curso();
+               curso1.setCargaHoraria(3500);
+               curso1.setDescricao("Engenharia Meânica");
+               Calendar conclusao = Calendar.getInstance();
+               conclusao.set(2018, Calendar.DECEMBER, 18);
+               jpa.persist(curso1);
+               
+               Curso curso2 = new Curso();
+               curso2.setCargaHoraria(3000);
+               curso2.setDescricao("Técnico em elétrica");
+               Calendar conclusao2 = Calendar.getInstance();
+               conclusao2.set(2023, Calendar.JULY, 25);
+               jpa.persist(curso2);
+               
+               
+                Funcionario funcionario1 = new Funcionario();
+                funcionario1.setNumero_ctps("12345");
+                Calendar admissao = Calendar.getInstance();
+                admissao.set(2019, Calendar.MARCH, 19);
+                funcionario1.setData_admissao(admissao);
+                funcionario1.setNome("Mauricio");
+                funcionario1.setCpf("85669325510");
+                Calendar nasc = Calendar.getInstance();
+                nasc.set(1990, Calendar.APRIL, 20);
+                funcionario1.setSenha("xyz789");
+                funcionario1.setData_nascimento(nasc);
+                funcionario1.getCursos().add(curso1);
+                jpa.persist(funcionario1);
+                 System.out.println("Funcionário CPF: " + funcionario1.getCpf() + 
+                        " Nome: " + funcionario1.getNome() + " Cursos: " + funcionario1.getCursos().toString() + 
+                        " CTPS: " + funcionario1.getNumero_ctps() + " cadastrado com sucesso.");
+              
+                Funcionario funcionario2 = new Funcionario();
+                funcionario2.setNumero_ctps("54321");
+                Calendar admissao2 = Calendar.getInstance();
+                admissao2.set(2023, Calendar.JANUARY, 23);
+                funcionario2.setData_admissao(admissao2);
+                funcionario2.setNome("Rafael");
+                funcionario2.setCpf("96356244489");
+                funcionario2.setSenha("abc123");
+                Calendar nasc2 = Calendar.getInstance();
+                nasc.set(1996, Calendar.AUGUST, 29);
+                funcionario2.setData_nascimento(nasc);
+                funcionario2.getCursos().add(curso2);
+                jpa.persist(funcionario2);
+                System.out.println("Funcionário CPF: " + funcionario2.getCpf() + 
+                        " Nome: " + funcionario2.getNome() + " Cursos: " + funcionario2.getCursos().toString() + 
+                        " CTPS: " + funcionario2.getNumero_ctps() + " cadastrado com sucesso.");
+               
+           }
+           
+        }
+    }
+    
+ // @Test
     public void testInsereVeiculos() throws Exception {
 
         PersistenciaJPA jpa = new PersistenciaJPA();
@@ -89,24 +160,26 @@ public class TestPersistenciaJPA {
             System.out.println("testPersistenciaListCargoJPA:: conectou no BD via jpa ...");
 
                 Veiculo v = new Veiculo();
-                v.setPlaca("JKK1869");
-                v.setModelo("Ka");
-                jpa.persist(v);
-
-                v = new Veiculo();
                 v.setPlaca("ABC1234");
-                v.setModelo("Weekend");
+                v.setModelo("KÁ");
                 jpa.persist(v);
 
                 v = new Veiculo();
-                v.setPlaca("KJS8563");
-                v.setModelo("Kwid");
+                v.setPlaca("XYZ6789");
+                v.setModelo("PALIO WEEKEND");
+                jpa.persist(v);
+
+                v = new Veiculo();
+                v.setPlaca("HIJ5648");
+                v.setModelo("FIESTA");
                 jpa.persist(v);
                 
                 v = new Veiculo();
-                v.setPlaca("JPA1234");
-                v.setModelo("Corolla");
+                v.setPlaca("KLM5863");
+                v.setModelo("KWID");
                 jpa.persist(v);
+                
+            System.out.println("VEICULOS ADICIONADOS COM SUCESSO");
      
 
             jpa.fecharConexao();

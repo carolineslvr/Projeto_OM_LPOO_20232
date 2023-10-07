@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 import org.junit.Test;
 
 /**
@@ -50,7 +51,7 @@ public class TestePersistenciaJDBC {
         2) se existir ao menos um cargo, imprimir, alterar e remover.
         3) se não existir, criar dois cargos e imprimi.
      */
-    //@Test
+   // @Test
     public void testPersistenciaListCargoJDBC() throws Exception {
         //criar um objeto do tipo PersistenciaJDBC.
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
@@ -89,6 +90,101 @@ public class TestePersistenciaJDBC {
                   alterar e remover cada item.
          Passo 3: caso a coleção esteja vazia, criar dois funcionarios com um Curso cada.
      */
+    
+     @Test
+    public void testaPersistenciaListaFuncionario() throws Exception{
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            
+            Collection <Funcionario> listFuncionarios = jdbc.listFuncionarios();
+            
+            if(listFuncionarios.isEmpty()){
+                  System.out.println("Lista de funcionários vazia, inserindo novo funcionário ...");
+                  Curso curso1 = new Curso();
+                  curso1.setCargaHoraria(3500);
+                  curso1.setDescricao("Engenharia Meânica");
+                  Calendar conclusao = Calendar.getInstance();
+                  conclusao.set(2018, Calendar.DECEMBER, 18);
+                  jdbc.persist(curso1);
+               
+                  Curso curso2 = new Curso();
+                  curso2.setCargaHoraria(3000);
+                  curso2.setDescricao("Técnico em elétrica");
+                  Calendar conclusao2 = Calendar.getInstance();
+                  conclusao2.set(2023, Calendar.JULY, 25);
+                  jdbc.persist(curso2);
+                  
+                  Cargo c = new Cargo();
+                  c.setDescricao("CARGO TEMPORARIO");
+                  jdbc.persist(c);
+               
+                  Funcionario funcionario1 = new Funcionario();
+                  funcionario1.setNumero_ctps("12345");
+                  //Calendar admissao = Calendar.getInstance();
+                  //admissao.set(2019, Calendar.MARCH, 19);
+                  //funcionario1.setData_admissao(admissao);
+                  funcionario1.setNome("Mauricio");
+                  funcionario1.setCpf("85669325510");
+                  funcionario1.setCargo(c);
+                  Calendar nasc = Calendar.getInstance();
+                  nasc.set(1990, Calendar.APRIL, 20);
+                  funcionario1.setSenha("xyz789");
+                  funcionario1.setData_nascimento(nasc);
+                  funcionario1.getCursos().add(curso1);
+                  jdbc.persist(funcionario1);
+                 
+                List<String> nomesCursos = new ArrayList<>();
+                for (Curso curso : funcionario1.getCursos()) {
+                   nomesCursos.add(curso.getDescricao());
+                }
+                 
+                  
+                 System.out.println("Funcionário CPF: " + funcionario1.getCpf() + 
+                        " Nome: " + funcionario1.getNome() + " Cursos: " + nomesCursos + 
+                        " CTPS: " + funcionario1.getNumero_ctps() + " cadastrado com sucesso.");
+              
+                Funcionario funcionario2 = new Funcionario();
+                funcionario2.setNumero_ctps("54321");
+                //Calendar admissao2 = Calendar.getInstance();
+                //admissao2.set(2023, Calendar.JANUARY, 23);
+                //funcionario2.setData_admissao(admissao2);
+                funcionario2.setNome("Rafael");
+                funcionario2.setCpf("96356244489");
+                funcionario2.setSenha("abc123");
+                funcionario2.setCargo(c);
+                Calendar nasc2 = Calendar.getInstance();
+                nasc.set(1996, Calendar.AUGUST, 29);
+                funcionario2.setData_nascimento(nasc);
+                funcionario2.getCursos().add(curso2);
+                jdbc.persist(funcionario2);
+                List<String> nomesCursos2 = new ArrayList<>();
+                for (Curso curso : funcionario2.getCursos()) {
+                   nomesCursos.add(curso.getDescricao());
+                }
+                 
+                System.out.println("Funcionário CPF: " + funcionario2.getCpf() + 
+                        " Nome: " + funcionario2.getNome() + " Cursos: " + nomesCursos2 + 
+                        " CTPS: " + funcionario2.getNumero_ctps() + " cadastrado com sucesso.");
+                  
+            } else{
+               for (Funcionario f : listFuncionarios){
+                   System.out.println("Funcionário ID: " + f.getCpf() + " Nome: " +
+                           f.getNome() + " Cursos: " + f.getCursos() + "\n");
+                   
+                    f.setNome("Joao");
+                    jdbc.persist(f);
+                    System.out.println("Nome funcionário alterados para: " + f.getNome());
+                    jdbc.remover(f);
+                    System.out.println("Cargo: " + f.getCpf() + " removido."); 
+               }
+            }
+            jdbc.fecharConexao();
+        } else {
+            System.out.println("Erro ao conectar com banco de dados");
+        }
+    }
+    
+    
     //@Test
     public void testPersistenciaCargoJDBC() throws Exception {
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
@@ -119,7 +215,7 @@ public class TestePersistenciaJDBC {
             Equipe e = new Equipe();
             e.setId(1);
             e.setEspecialidades("teste");
-            e.setNome("apertador de parafuso");
+            e.setNome("borracharia");
             jdbc.persist(e);
 
             Servico s = new Servico();
@@ -130,15 +226,15 @@ public class TestePersistenciaJDBC {
 
             Cliente cli = new Cliente();
             cli.setCpf("3");
-            cli.setNome("Artur");
-            cli.setSenha("11111");
+            cli.setNome("Bernardo");
+            cli.setSenha("12876");
             jdbc.persist(cli);
             o.setCliente(cli);
 
             Funcionario func = new Funcionario();
             func.setCpf("1111111111");
             func.setNumero_ctps("1234");
-            func.setNome("Toninho");
+            func.setNome("Andre");
             func.setSenha("123456");
             Cargo cargo = new Cargo();
             cargo.setId(1);
@@ -147,7 +243,7 @@ public class TestePersistenciaJDBC {
             o.setFuncionario(func);
 
             Veiculo v = new Veiculo();
-            v.setPlaca("IWI9J98");
+            v.setPlaca("POL5236");
             v.setAno(2010);
             o.setVeiculo(v);
             jdbc.persist(o);
@@ -157,7 +253,7 @@ public class TestePersistenciaJDBC {
             s.setStatus(StatusServico.ATRASADO);
             jdbc.persist(s);
 
-            System.out.println("Persistiu");
+            System.out.println("SALVO COM SUCESSO");
         } else {
             System.out.println("Não conectou!");
         }
@@ -170,7 +266,8 @@ public class TestePersistenciaJDBC {
 
             Curso c = new Curso();
             //c.setId(1);
-            c.setDescricao("nova");
+            c.setDescricao("NOVO CURSO");
+            c.setCargaHoraria(300);
             jdbc.persist(c);
 
             System.out.println("Persistiu");
@@ -278,9 +375,7 @@ public class TestePersistenciaJDBC {
         }
     }
 
-    // PRIMEIRO REGISTRA OS VEÍCULOS NO TESTJPA
-    // DEPOIS EXECUTA ESSA FUNÇÃO
-    @Test
+  //@Test
     public void testRecuperaClientesVeiculos() throws Exception {
         Collection<Cliente> clientes = null;
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
@@ -321,12 +416,10 @@ public class TestePersistenciaJDBC {
                 PersistenciaJPA jpa = new PersistenciaJPA();
                 if (jpa.conexaoAberta()) {
                     Collection<Veiculo> veiculos = new ArrayList();
-                    Veiculo v = (Veiculo) jpa.find(Veiculo.class, "JAA1E39");
-                    //v.setPlaca("JAA1E39");
+                    Veiculo v = (Veiculo) jpa.find(Veiculo.class, "ABC1234");
                     veiculos.add(v);
 
-                    v = (Veiculo) jpa.find(Veiculo.class, "IWI9J98");
-                    //v.setPlaca("IWI9J98");
+                    v = (Veiculo) jpa.find(Veiculo.class, "XYZ6789");
                     veiculos.add(v);
                     cli.setVeiculo(veiculos);
                     jdbc.persist(cli);
@@ -334,17 +427,15 @@ public class TestePersistenciaJDBC {
                     // SEGUNDO
                     cli = new Cliente();
                     cli.setCpf("00000");
-                    cli.setNome("João");
+                    cli.setNome("Marcos");
                     cli.setSenha("123456");
 
                     veiculos = new ArrayList();
 
-                    v = (Veiculo) jpa.find(Veiculo.class, "JPA1234");
-                    //v.setPlaca("JPA1234");
+                    v = (Veiculo) jpa.find(Veiculo.class, "HIJ5648");
                     veiculos.add(v);
 
-                    v = (Veiculo) jpa.find(Veiculo.class, "ITP6140");
-                    //v.setPlaca("ITP6140");
+                    v = (Veiculo) jpa.find(Veiculo.class, "KLM5863");
                     veiculos.add(v);
 
                     cli.setVeiculo(veiculos);
@@ -361,15 +452,3 @@ public class TestePersistenciaJDBC {
 
     }
 }
-
-// FUNCIONARIO OK
-// CLIENTE OK
-// ORCAMENTO OK
-// VEICULO OK
-// SERVICO OK
-// EQUIPE OK
-// MAOOBRA OK
-// CURSO OK
-// CARGO OK
-// PECA OK
-// PAGAMENTO OK

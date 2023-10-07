@@ -71,7 +71,7 @@ public class PersistenciaJPA implements InterfacePersistencia{
 
     @Override
     public Collection<Funcionario> listFuncionarios() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+       return entity.createNamedQuery("Funcionario.orderbynome").getResultList();
     }
 
     @Override
