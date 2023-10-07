@@ -1183,9 +1183,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             //func.setData_admmissao(rs3.getDate("data_admmissao"));    // AJUSTAR
             func.setNumero_ctps(rs3.getString("numero_ctps"));
 
-            //seta as informações do rs
-            PreparedStatement ps2 = this.con.prepareStatement("select funcionario_cpf, curso_id from tb_funcionario_curso fc, tb_pessoa f, tb_curso c "
-                    + "where fc.funcionario_cpf = ?");
+           PreparedStatement ps2 = this.con.prepareStatement("SELECT fc.funcionario_cpf, c.id, c.descricao FROM tb_funcionario_curso fc JOIN tb_curso c ON fc.curso_id = c.id WHERE fc.funcionario_cpf = ?");
             ps2.setString(1, rs.getString("cpf"));
             ResultSet rs2 = ps2.executeQuery();//executa o sql e retorna
             Collection<Curso> colecaoCursos = new ArrayList();
@@ -1198,14 +1196,14 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             }
 
             ps2.close();
-            ps3.close();
-
+       
             func.setCursos(colecaoCursos);
 
             colecaoRetorno.add(func);//adiciona na colecao
         }
 
-        ps.close();//fecha o cursor
+        ps.close();
+        ps3.close();//fecha o cursor
 
         return colecaoRetorno; //retorna a colecao.
     }

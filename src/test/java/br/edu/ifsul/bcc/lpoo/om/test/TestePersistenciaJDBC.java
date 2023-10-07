@@ -171,11 +171,11 @@ public class TestePersistenciaJDBC {
                    System.out.println("Funcionário ID: " + f.getCpf() + " Nome: " +
                            f.getNome() + " Cursos: " + f.getCursos() + "\n");
                    
-                    f.setNome("Joao");
+                    /*f.setNome("Joao");
                     jdbc.persist(f);
                     System.out.println("Nome funcionário alterados para: " + f.getNome());
                     jdbc.remover(f);
-                    System.out.println("Cargo: " + f.getCpf() + " removido."); 
+                    System.out.println("Cargo: " + f.getCpf() + " removido."); */
                }
             }
             jdbc.fecharConexao();
