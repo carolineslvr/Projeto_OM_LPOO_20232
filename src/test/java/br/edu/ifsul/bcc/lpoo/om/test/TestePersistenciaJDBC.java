@@ -91,7 +91,7 @@ public class TestePersistenciaJDBC {
          Passo 3: caso a coleção esteja vazia, criar dois funcionarios com um Curso cada.
      */
     
-     @Test
+    //@Test
     public void testaPersistenciaListaFuncionario() throws Exception{
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
         if(jdbc.conexaoAberta()){
@@ -140,8 +140,8 @@ public class TestePersistenciaJDBC {
                  
                   
                  System.out.println("Funcionário CPF: " + funcionario1.getCpf() + 
-                        " Nome: " + funcionario1.getNome() + " Cursos: " + nomesCursos + 
-                        " CTPS: " + funcionario1.getNumero_ctps() + " cadastrado com sucesso.");
+                        " Nome: " + funcionario1.getNome() + ". Cursos: " + nomesCursos + 
+                        " CTPS: " + funcionario1.getNumero_ctps() + " foi cadastrado com sucesso.");
               
                 Funcionario funcionario2 = new Funcionario();
                 funcionario2.setNumero_ctps("54321");
@@ -159,23 +159,28 @@ public class TestePersistenciaJDBC {
                 jdbc.persist(funcionario2);
                 List<String> nomesCursos2 = new ArrayList<>();
                 for (Curso curso : funcionario2.getCursos()) {
-                   nomesCursos.add(curso.getDescricao());
+                   nomesCursos2.add(curso.getDescricao());
                 }
                  
                 System.out.println("Funcionário CPF: " + funcionario2.getCpf() + 
-                        " Nome: " + funcionario2.getNome() + " Cursos: " + nomesCursos2 + 
-                        " CTPS: " + funcionario2.getNumero_ctps() + " cadastrado com sucesso.");
+                        " Nome: " + funcionario2.getNome() + ". Cursos: " + nomesCursos2 + 
+                        " CTPS: " + funcionario2.getNumero_ctps() + " foi cadastrado com sucesso.");
                   
-            } else{
-               for (Funcionario f : listFuncionarios){
+            } else{   
+               
+               for (Funcionario f : listFuncionarios){  
+               List<String> nomesCursos = new ArrayList<>();
+                for (Curso curso : f.getCursos()) {
+                   nomesCursos.add(curso.getDescricao());
+                }
                    System.out.println("Funcionário ID: " + f.getCpf() + " Nome: " +
-                           f.getNome() + " Cursos: " + f.getCursos() + "\n");
+                           f.getNome() + " Cursos: " + nomesCursos + "\n");
                    
-                    /*f.setNome("Joao");
-                    jdbc.persist(f);
-                    System.out.println("Nome funcionário alterados para: " + f.getNome());
+                   // f.setNome("Joao");
+                   // jdbc.persist(f);
+                   // System.out.println("Nome funcionário alterados para: " + f.getNome());
                     jdbc.remover(f);
-                    System.out.println("Cargo: " + f.getCpf() + " removido."); */
+                    System.out.println("Funcionario: " + f.getCpf() + " removido.");
                }
             }
             jdbc.fecharConexao();
@@ -375,14 +380,14 @@ public class TestePersistenciaJDBC {
         }
     }
 
-  //@Test
+  @Test
     public void testRecuperaClientesVeiculos() throws Exception {
         Collection<Cliente> clientes = null;
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
         if (jdbc.conexaoAberta()) {
-            clientes = jdbc.listClientes();
+            clientes = jdbc.listClientes2();
 
-            if (clientes != null) {
+            if (clientes != null && !clientes.isEmpty()) {
                 System.out.println("Encontrou registros!\n\n");
                 int i = 0;
                 for (Cliente cli : clientes) {
@@ -451,4 +456,54 @@ public class TestePersistenciaJDBC {
         }
 
     }
+      
+   // @Test
+    public void testPersitenciaClienteJDBC() throws Exception{
+        //criar um objeto do tipo PersistenciaJPA.
+        PersistenciaJDBC jdbc = new PersistenciaJDBC();
+        if(jdbc.conexaoAberta()){
+            System.out.println("conectou no BD via jdbc ...");
+            
+            Collection<Cliente> list = jdbc.listClientes();
+            if(!list.isEmpty()){
+                
+                //percorrer e remover.
+                for(Cliente c : list){
+                    
+                    System.out.println("Cliente: "+c.getCpf());
+                    for(Veiculo v : c.getVeiculo()){
+                        System.out.println("\t Veiculo:" + v.getPlaca());
+                    }
+                    
+                    jdbc.remover(c);
+                }
+                
+            }else{
+                
+                Cliente c = new Cliente();
+                //setar demais informações.
+                c.setCpf("10001347788");
+                c.setNome("Telmo");
+                c.setData_nascimento(Calendar.getInstance());
+                c.setComplemento(".");
+                c.setCep("99010035");
+                c.setSenha("123456");
+                c.setNumero(".");
+                Veiculo v = (Veiculo) jdbc.find(Veiculo.class, "igd1903");
+                List<Veiculo> listV = new ArrayList();
+                listV.add(v);
+                
+                c.setVeiculo(listV);
+                
+                jdbc.persist(c);
+                
+            }
+            
+            jdbc.fecharConexao();
+        }else{
+            System.out.println("nao conectou no BD via jdbc ...");
+                        
+        }
+    }
+    
 }

@@ -47,9 +47,20 @@ public class Cliente extends Pessoa{
     public Collection<Veiculo> getVeiculo() {
         return veiculo;
     }
+    
+    //metodo que ja adiciona diretamente uma colecao formada por fora
 
     public void setVeiculo(Collection<Veiculo> veiculo) {
         this.veiculo = veiculo;
+    }
+    
+    //metodo que adiciona um veiculo por vez na colecao 
+    
+    public void setVeiculos(Veiculo v){
+        if (this.veiculo == null){
+            this.veiculo = new ArrayList();
+        }
+        this.veiculo.add(v);
     }
     
     

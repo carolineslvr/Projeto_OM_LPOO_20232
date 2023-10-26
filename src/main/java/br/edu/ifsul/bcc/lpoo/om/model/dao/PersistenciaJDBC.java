@@ -258,7 +258,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         + "('C',?,?,?,?)");
 
                 ps.setString(1, c.getCpf());
-                ps.setDate(2, null);
+                ps.setDate(2, null); //new java.sql.Date(cli.getData_nascimento().getTimeInMillis())
                 ps.setString(3, c.getNome());
                 ps.setString(4, c.getSenha());
                 ps.execute();
@@ -271,7 +271,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 ps2.setString(1, c.getObservacoes());
                 ps2.setString(2, c.getCpf());
 
-                ps2.execute();
+                ps2.execute(); 
 
                 if (c.getVeiculo() != null) {
 
@@ -292,6 +292,28 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 }
 
                 ps2.close();
+                
+             // outra forma a partir da linha 275:
+            /* Boolean res = ps2.executeQuery();
+             // fica (!res)pq retorna false para insert e true para update 
+                 if(!res){
+                     //se necessário o insert em tb_cliente_veiculo
+                        if (!c.getVeiculo().isEmpty()){
+
+                            for(Veiculo vs : c.getVeiculo()){
+
+                                PreparedStatement ps3 = this.con.prepareStatement("insert into tb_cliente_veiculo "
+                                                                                + "(cliente_cpf, veiculo_id) "
+                                                                                + "values "
+                                                                                + "(?, ?)");
+                                ps3.setString(1, cli.getCpf());
+                                ps3.setString(2, vs.getPlaca());
+
+                                ps3.execute();
+                                ps3.close();
+                            }
+
+                }*/
             } else {
                 PreparedStatement ps
                         = this.con.prepareStatement("update tb_pessoa set cep = ?, "
@@ -487,7 +509,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 ps2.setInt(3, func.getCargo().getId());
                 //setar os parametros...
 
-                ResultSet rs2 = ps2.executeQuery();
+                ResultSet rs2 = ps2.executeQuery(); //usa executeQuery apenas quando tem returning no preparedStatement
                 System.out.println("passou2");
 
                 if (rs2.next()) {
@@ -1273,5 +1295,43 @@ public class PersistenciaJDBC implements InterfacePersistencia {
         }
 
         return listaRetorno;
+    }
+    
+    public Collection<Cliente> listClientes2() throws Exception {
+         Collection<Cliente> colecaoRetorno = null;
+
+        PreparedStatement ps = this.con.prepareStatement("select p.nome, p.senha, p.cpf from tb_pessoa p, "
+                                                                    + "tb_cliente c where p.cpf=c.cpf");
+
+
+        ResultSet rs = ps.executeQuery();//executa o sql e retorna
+
+        colecaoRetorno = new ArrayList();//inicializa a collecao
+
+        while(rs.next()){//percorre o ResultSet
+
+            Cliente cli = new Cliente();//inicializa o Cliente
+            //seta as informações do rs
+            cli.setCpf(rs.getString("cpf"));
+            PreparedStatement ps2 = this.con.prepareStatement("select v.placa "
+                    + "from tb_cliente_veiculo cv, tb_cliente c, tb_veiculo v "
+                    + " where c.cpf=cv.cliente_cpf and cv.veiculo_id=v.placa");
+            ResultSet rs2 = ps2.executeQuery();//executa o sql e retorna
+            Collection<Veiculo> colecaoVeiculos = new ArrayList();
+            while(rs2.next()){
+                Veiculo v = new Veiculo();
+                v.setPlaca(rs2.getString("placa"));
+                colecaoVeiculos.add(v);
+            }
+            rs2.close();
+
+            cli.setVeiculo(colecaoVeiculos);
+
+            colecaoRetorno.add(cli);//adiciona na colecao
+        }
+
+        ps.close();//fecha o cursor
+
+        return colecaoRetorno; //retorna a colecao.
     }
 }
