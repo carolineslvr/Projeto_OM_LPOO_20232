@@ -1334,4 +1334,29 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
         return colecaoRetorno; //retorna a colecao.
     }
+
+    @Override
+    public Funcionario doLogin(String cpf, String senha) throws Exception {
+         Funcionario funcionario = null;        
+         PreparedStatement ps = 
+            this.con.prepareStatement("select p.cpf, to_char(p.data_nascimento, 'dd/mm/yyyy') as data_nascimento, p.nome"
+                                        + " from tb_pessoa p "
+                                        + " where p.cpf = ? and p.senha = ? ");
+                        
+            ps.setString(1, cpf);
+            ps.setString(2, senha);
+            
+            ResultSet rs = ps.executeQuery();//o ponteiro do REsultSet inicialmente está na linha -1
+            
+            if(rs.next()){//se a matriz (ResultSet) tem uma linha
+
+                funcionario = new Funcionario();
+                funcionario.setCpf(rs.getString("cpf"));  
+                //...recupera demais campos do ResultSet
+            }
+            ps.close();
+            
+            return funcionario;        
+    }
+       
 }
