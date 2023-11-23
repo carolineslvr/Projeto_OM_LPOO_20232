@@ -101,5 +101,9 @@ public class Funcionario extends Pessoa {
         this.data_demissao = data_demissao;
     }
     
+    @Override
+    public String toString(){
+        return this.getCpf();
+    }
     
 }

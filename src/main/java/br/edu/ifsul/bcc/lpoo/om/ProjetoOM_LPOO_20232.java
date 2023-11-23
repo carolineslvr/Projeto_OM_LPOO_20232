@@ -32,6 +32,10 @@ public class ProjetoOM_LPOO_20232 {
     public static void main(String[] args) {
         
         new ProjetoOM_LPOO_20232(); //instanciando a calsse
+        
+        //dados autenticacao
+        //cpf: 12345678912
+        //senha: 123456
       
     }
 }

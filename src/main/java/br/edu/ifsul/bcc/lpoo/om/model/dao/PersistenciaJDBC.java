@@ -479,8 +479,8 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
             Funcionario func = (Funcionario) o;
 
-            //verificar a acao: insert ou update.
-            if (func.getTipo() == null) {
+             //verificar a acao: insert ou update.
+            if (func.getData_admissao() == null) {
                 //insert tb_pessoa
                 PreparedStatement ps
                         = this.con.prepareStatement("insert into tb_pessoa (tipo,cpf,data_nascimento,nome,senha) values "
@@ -509,7 +509,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 ps2.setInt(3, func.getCargo().getId());
                 //setar os parametros...
 
-                ResultSet rs2 = ps2.executeQuery(); //usa executeQuery apenas quando tem returning no preparedStatement
+                ResultSet rs2 = ps2.executeQuery();
                 System.out.println("passou2");
 
                 if (rs2.next()) {
@@ -569,13 +569,12 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                         = this.con.prepareStatement("update tb_funcionario set data_demissao = ?, "
                                 + "numero_ctps = ?, "
                                 + "cargo_id = ?"
-                                + " where cpf = ?");
+                                + "where cpf = ? ");
                 //setar os demais campos e parametros.
 
-               // ps2.setDate(1, new java.sql.Date(func.getData_demissao().getTimeInMillis()));
-                ps2.setDate(1, null);
+                ps2.setDate(1, new java.sql.Date(func.getData_demissao().getTimeInMillis()));
                 ps2.setString(2, func.getNumero_ctps());
-                 ps2.setInt(3, func.getCargo().getId());
+                ps2.setInt(3, func.getCargo().getId());
                 ps2.setString(4, func.getCpf());
 
                 ps2.execute();
@@ -1202,7 +1201,9 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             func.setNome(rs.getString("nome"));
             func.setNumero(rs.getString("numero"));
             func.setSenha(rs.getString("senha"));
-            //func.setData_admmissao(rs3.getDate("data_admmissao"));    // AJUSTAR
+            Calendar c = Calendar.getInstance();                
+            c.setTimeInMillis(rs3.getDate("data_admissao").getTime());                
+            func.setData_admissao(c);
             func.setNumero_ctps(rs3.getString("numero_ctps"));
 
            PreparedStatement ps2 = this.con.prepareStatement("SELECT fc.funcionario_cpf, c.id, c.descricao FROM tb_funcionario_curso fc JOIN tb_curso c ON fc.curso_id = c.id WHERE fc.funcionario_cpf = ?");
@@ -1341,7 +1342,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
          PreparedStatement ps = 
             this.con.prepareStatement("select p.cpf, to_char(p.data_nascimento, 'dd/mm/yyyy') as data_nascimento, p.nome"
                                         + " from tb_pessoa p "
-                                        + " where p.cpf = ? and p.senha = ? ");
+                                        + " where p.cpf = ? and p.senha = ? and tipo = 'F' ");
                         
             ps.setString(1, cpf);
             ps.setString(2, senha);
