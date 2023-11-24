@@ -544,38 +544,37 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
                 //update tb_pessoa.
                 PreparedStatement ps
-                        = this.con.prepareStatement("update tb_pessoa set cep = ?, "
-                                + "complemento = ?, "
-                                + "data_nascimento = ?, "
+                        = this.con.prepareStatement("update tb_pessoa set cep = null, "
+                                + "complemento = null, "
                                 + "nome = ?, "
                                 + "numero = ?, "
                                 + "senha = ?"
                                 + " where cpf = ? ");
                 //setar os demais campos e parametros.
 
-                ps.setString(1, func.getCep());
-                ps.setString(2, func.getComplemento());
-                ps.setDate(3, new java.sql.Date(func.getData_nascimento().getTimeInMillis()));
-                ps.setString(4, func.getNome());
-                ps.setString(5, func.getNumero());
-                ps.setString(6, func.getSenha());
-                ps.setString(7, func.getCpf());
+               // ps.setString(1, func.getCep());
+               // ps.setString(2, func.getComplemento());
+              //  ps.setDate(3, new java.sql.Date(func.getData_nascimento().getTimeInMillis()));
+                ps.setString(1, func.getNome());
+                ps.setString(2, func.getNumero());
+                ps.setString(3, func.getSenha());
+                ps.setString(4, func.getCpf());
 
                 ps.execute();
                 ps.close();
 
                 //update tb_funcionario.
                 PreparedStatement ps2
-                        = this.con.prepareStatement("update tb_funcionario set data_demissao = ?, "
+                        = this.con.prepareStatement("update tb_funcionario set data_demissao = null, "
                                 + "numero_ctps = ?, "
-                                + "cargo_id = ?"
+                                + "cargo_id = ? "
                                 + "where cpf = ? ");
                 //setar os demais campos e parametros.
 
-                ps2.setDate(1, new java.sql.Date(func.getData_demissao().getTimeInMillis()));
-                ps2.setString(2, func.getNumero_ctps());
-                ps2.setInt(3, func.getCargo().getId());
-                ps2.setString(4, func.getCpf());
+               // ps2.setDate(1, new java.sql.Date(func.getData_demissao().getTimeInMillis()));
+                ps2.setString(1, func.getNumero_ctps());
+                ps2.setInt(2, func.getCargo().getId());
+                ps2.setString(3, func.getCpf());
 
                 ps2.execute();
                 ps2.close();
@@ -1192,12 +1191,12 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
         while (rs.next() && rs3.next()) {//percorre o ResultSet
 
-            Funcionario func = new Funcionario();//inicializa o Cargo
-            //func.setCargo();
+            Funcionario func = new Funcionario();//inicializa o funcionario
             func.setCep(rs.getString("cep"));
             func.setComplemento(rs.getString("complemento"));
             func.setCpf(rs.getString("cpf"));
-            //func.setData_nascimento(data_nascimento); // AJUSTAR
+            //Calendar cal = Calendar.getInstance();                
+            //cal.setTimeInMillis(rs.getDate("data_nascimento").getTime());
             func.setNome(rs.getString("nome"));
             func.setNumero(rs.getString("numero"));
             func.setSenha(rs.getString("senha"));
@@ -1219,7 +1218,18 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             }
 
             ps2.close();
-       
+            
+            PreparedStatement psCargo = this.con.prepareStatement("SELECT c.id, c.descricao FROM tb_cargo c JOIN tb_funcionario f ON c.id = f.cargo_id WHERE f.cpf = ?");
+            psCargo.setString(1, rs.getString("cpf"));
+            ResultSet rsCargo = psCargo.executeQuery();
+            if (rsCargo.next()) {
+                Cargo cargo = new Cargo();
+                cargo.setId(rsCargo.getInt("id"));
+                cargo.setDescricao(rsCargo.getString("descricao"));
+                func.setCargo(cargo);
+            }
+            psCargo.close();
+
             func.setCursos(colecaoCursos);
 
             colecaoRetorno.add(func);//adiciona na colecao

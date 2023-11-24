@@ -227,7 +227,20 @@ public class JPanelAFuncionarioFormulario extends JPanel implements ActionListen
             Funcionario f = new Funcionario();
                 f.setCpf(txfCPF.getText().trim());    
                 f.setSenha(new String(txfSenha.getPassword()).trim());
-                f.setCargo((Cargo) cbxCargo.getSelectedItem());
+                String descricao = (String) cbxCargo.getSelectedItem();
+                try{
+                    Collection <Cargo> listaDeCargos = controle.getConexaoJDBC().listCargos();
+                     for (Cargo cargo : listaDeCargos) {
+                       if (cargo.getDescricao().equals(descricao)){
+                           
+                            f.setCargo(cargo);
+                        }
+                    }
+                }catch (Exception ex) {
+                    JOptionPane.showMessageDialog(this, "Erro ao encontrar Cargo -:"+ex.getLocalizedMessage(), "Cargo", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }      
+              
                 f.setNumero_ctps(txfCTPS.getText().trim());
                 f.setNome(txfNome.getText().trim());
                 
@@ -256,7 +269,7 @@ public class JPanelAFuncionarioFormulario extends JPanel implements ActionListen
             txfCPF.setEditable(false);
             txfCPF.setText(funcionario.getCpf());
             txfSenha.setText(funcionario.getSenha());
-            cbxCargo.getModel().setSelectedItem(funcionario.getCargo());//aqui chama o método equals do classe Endereco
+            cbxCargo.getModel().setSelectedItem(funcionario.getCargo().getDescricao());//aqui chama o método equals do classe Endereco
             txfNome.setText(funcionario.getNome()); 
             txfCTPS.setText(funcionario.getNumero_ctps());
             txfDataAdmissao.setText(format.format(f.getData_admissao().getTime()));                                 

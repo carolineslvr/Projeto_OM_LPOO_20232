@@ -88,7 +88,7 @@ public class JPanelAFuncionarioListagem extends JPanel implements ActionListener
         
         modeloTabela = new DefaultTableModel(
             new String [] {
-                    "CPF", "Nome", "Data de Admissão"
+                    "CPF", "Nome", "Cargo", "Data de Admissão"
             }, 0);
         
         tblListagem.setModel(modeloTabela);
@@ -144,10 +144,11 @@ public class JPanelAFuncionarioListagem extends JPanel implements ActionListener
 
             Collection <Funcionario> listFuncionarios =  controle.getConexaoJDBC().listFuncionarios();
             for(Funcionario f : listFuncionarios){
-                                                
+                String descricaoCargo = (f.getCargo() != null) ? f.getCargo().getDescricao() : "";    
+                System.out.println("CARGUINHO: " + f.getCargo().getDescricao());
                 model.addRow(new Object[]{f, //aqui chamou o to string
                                           f.getNome(), 
-                                          //f.getCargo(),  
+                                          descricaoCargo,  
                                           format.format(f.getData_admissao().getTime())});
                                      
 
