@@ -1371,5 +1371,45 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             
             return funcionario;        
     }
+    
+     @Override
+    public Collection<MaoObra> listMaoObras(String filtro_descricao) throws Exception {
        
+          
+        Collection<MaoObra> colecaoRetorno = null;
+       
+        
+        PreparedStatement ps = null;
+        
+        if(filtro_descricao == null){
+            ps = this.con.prepareStatement("select m.id, m.descricao, m.tempo_estimado_execucao, m.valor from tb_maoobra m order by m.id asc");
+        }else{
+            ps = this.con.prepareStatement("select m.id, m.descricao, m.tempo_estimado_execucao, m.valor from tb_maoobra m where m.descricao like ? order by m.id asc");
+            ps.setString(1, filtro_descricao+"%");
+        }
+                                                                        
+        ResultSet rs = ps.executeQuery();//executa o sql e retorna
+        
+        colecaoRetorno = new ArrayList();//inicializa a collecao
+        
+        while(rs.next()){//percorre o ResultSet
+            
+            MaoObra mo = new MaoObra();//inicializa o Cliente
+            //seta as informações do rs
+            mo.setId(rs.getInt("id"));
+            mo.setDescricao(rs.getString("descricao"));
+            if(rs.getDate("tempo_estimado_execucao") != null)
+                mo.setTempo_estimado_execucao(new java.util.Date(rs.getDate("tempo_estimado_execucao").getTime()));
+            mo.setValor(rs.getFloat("valor"));
+            
+            colecaoRetorno.add(mo);           
+
+        }
+         rs.close();
+        ps.close();//fecha o cursor
+        
+        return colecaoRetorno; //retorna a colecao.
+        
+    }
+        
 }
