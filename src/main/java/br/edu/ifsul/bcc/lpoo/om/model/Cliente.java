@@ -62,7 +62,11 @@ public class Cliente extends Pessoa{
         }
         this.veiculo.add(v);
     }
-    
+     
+    @Override
+    public String toString(){
+        return this.getCpf();
+    }
     
     
 }

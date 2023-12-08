@@ -215,6 +215,8 @@ public class JPanelAFuncionarioListagem extends JPanel implements ActionListener
             }else{
                   JOptionPane.showMessageDialog(this, "Selecione uma linha para remover!", "Remoção", JOptionPane.INFORMATION_MESSAGE);
             }
+        } else if(arg0.getActionCommand().equals(btnFiltro.getActionCommand())){
+         
         }
         
     }

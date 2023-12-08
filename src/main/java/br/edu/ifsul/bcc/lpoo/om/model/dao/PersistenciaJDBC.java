@@ -30,7 +30,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
 
     private final String DRIVER = "org.postgresql.Driver";
     private final String USER = "postgres";
-    private final String SENHA = "branca98";
+    private final String SENHA = "branca958";
     public static final String URL = "jdbc:postgresql://localhost:5432/db_om_lpoo_20232";
     private Connection con = null;
 
@@ -627,7 +627,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                 ResultSet rs = ps.executeQuery();
 
                 if (rs.next()) {
-                    mao.setId(rs.getString("id"));
+                    mao.setId(rs.getInt("id"));
                 }
                 ps.close();
 
@@ -644,7 +644,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                     ps.setDate(2, null);
                 }
                 ps.setFloat(3, mao.getValor());
-                ps.setString(4, mao.getId());
+                ps.setInt(4, mao.getId());
                 ps.execute();
                 ps.close();
             }
@@ -687,7 +687,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                                     + "values "
                                     + "(?, ?)");
                             ps2.setInt(1, orc.getId());
-                            ps2.setString(2, mao.getId());
+                            ps2.setInt(2, mao.getId());
                             ps2.execute();
                             ps2.close();
                         }
@@ -741,7 +741,7 @@ public class PersistenciaJDBC implements InterfacePersistencia {
                                 + "values "
                                 + "(?, ?)");
                         ps3.setInt(1, orc.getId());
-                        ps3.setString(2, mao.getId());
+                        ps3.setInt(2, mao.getId());
 
                         ps3.execute();
                         ps3.close();
@@ -1052,13 +1052,13 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             MaoObra m = (MaoObra) o;
             PreparedStatement ps = this.con.prepareStatement("delete from tb_orcamento_maoobra "
                     + "where maoobra_id = ?");
-            ps.setString(1, m.getId());
+            ps.setInt(1, m.getId());
             ps.execute();
             ps.close();
 
             ps = this.con.prepareStatement("delete from tb_maoobra "
                     + "where id = ?");
-            ps.setString(1, m.getId());
+            ps.setInt(1, m.getId());
             ps.execute();
             ps.close();
 
@@ -1324,6 +1324,8 @@ public class PersistenciaJDBC implements InterfacePersistencia {
             Cliente cli = new Cliente();//inicializa o Cliente
             //seta as informações do rs
             cli.setCpf(rs.getString("cpf"));
+            cli.setNome(rs.getString("nome"));
+            cli.setSenha(rs.getString("senha"));
             PreparedStatement ps2 = this.con.prepareStatement("select v.placa "
                     + "from tb_cliente_veiculo cv, tb_cliente c, tb_veiculo v "
                     + " where c.cpf=cv.cliente_cpf and cv.veiculo_id=v.placa");

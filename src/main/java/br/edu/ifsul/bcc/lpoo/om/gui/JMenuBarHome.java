@@ -16,13 +16,17 @@ import javax.swing.JOptionPane;
  */
 public class JMenuBarHome extends JMenuBar implements ActionListener{
     
+    //criando menus e itens menus
+    
     private JMenu menuArquivo;
     private JMenuItem menuItemLogout;
     private JMenuItem menuItemSair;
 
     private JMenu menuCadastro;
     private JMenuItem menuItemFuncionario;    
-    private JMenuItem menuItemFuncionarioDesigner;   
+    private JMenuItem menuItemFuncionarioDesigner;  
+    private JMenuItem menuItemPeca;
+    private JMenuItem menuItemCliente;
 
     private Controle controle;
     
@@ -47,6 +51,19 @@ public class JMenuBarHome extends JMenuBar implements ActionListener{
         menuItemLogout = new JMenuItem("Logout");
         menuItemLogout.setToolTipText("Logout"); //acessibilidade
         menuItemLogout.setFocusable(true);     //acessibilidade
+        
+        
+        //config item
+        
+        menuItemPeca = new JMenuItem("Peça");
+        menuItemPeca.setToolTipText("Peça");
+        menuItemPeca.setFocusable(true);
+        
+        menuItemCliente = new JMenuItem("Cliente");
+        menuItemCliente.setToolTipText("Cliente");
+        menuItemCliente.setFocusable(true);
+        
+        //cria evento item e mostra
         
         menuItemLogout.addActionListener(this);
         menuItemLogout.setActionCommand("menu_logout");
@@ -73,14 +90,23 @@ public class JMenuBarHome extends JMenuBar implements ActionListener{
         menuItemFuncionarioDesigner.setToolTipText("Funcionario (Desinger)"); //acessibilidade
         menuItemFuncionarioDesigner.setFocusable(true); //acessibilidade
         
-                   
+        menuItemPeca.addActionListener(this);
+        menuItemPeca.setActionCommand("menu_peca");
+        menuCadastro.add(menuItemPeca);
+        
+        menuItemCliente.addActionListener(this);
+        menuItemCliente.setActionCommand("menu_cliente");
+        menuCadastro.add(menuItemCliente);
+              
         menuItemFuncionarioDesigner.addActionListener(this);
         menuItemFuncionarioDesigner.setActionCommand("menu_funcionario_designer");
         menuCadastro.add(menuItemFuncionarioDesigner);              
 
         this.add(menuArquivo);
         this.add(menuCadastro);
-    }
+    } 
+    
+    //testa onde foi clicado
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -102,9 +128,13 @@ public class JMenuBarHome extends JMenuBar implements ActionListener{
             
           controle.showTela("tela_autenticacao");    
                         
-        }else if(e.getActionCommand().equals(menuItemFuncionarioDesigner.getActionCommand())){
+        }else if(e.getActionCommand().equals(menuItemPeca.getActionCommand())){
             
-                        //controle.showTela("tela_jogador_designer");
+            controle.showTela("tela_peca");
+            
+        } else if(e.getActionCommand().equals(menuItemCliente.getActionCommand())){
+            
+            controle.showTela("listagem_cliente");
         }
         
     }

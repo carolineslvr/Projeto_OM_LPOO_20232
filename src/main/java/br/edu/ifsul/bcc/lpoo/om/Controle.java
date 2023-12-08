@@ -5,7 +5,9 @@ import br.edu.ifsul.bcc.lpoo.om.gui.JFramePrincipal;
 import br.edu.ifsul.bcc.lpoo.om.gui.JMenuBarHome;
 import br.edu.ifsul.bcc.lpoo.om.gui.JPanelHome;
 import br.edu.ifsul.bcc.lpoo.om.gui.autenticacao.JPanelAutenticacao;
+import br.edu.ifsul.bcc.lpoo.om.gui.cliente.JPanelCliente;
 import br.edu.ifsul.bcc.lpoo.om.gui.funcionario.JPanelAFuncionario;
+import br.edu.ifsul.bcc.lpoo.om.gui.peca.JPanelPeca;
 import br.edu.ifsul.bcc.lpoo.om.model.Funcionario;
 import br.edu.ifsul.bcc.lpoo.om.model.dao.PersistenciaJDBC;
 import javax.swing.JOptionPane;
@@ -18,6 +20,8 @@ public class Controle {
     private JMenuBarHome menuBar;
     private JPanelHome telaHome;
     private JPanelAFuncionario telaFuncionario;
+    private JPanelPeca telaPeca;
+    private JPanelCliente telaCliente;
     
     public Controle(){
         
@@ -45,17 +49,21 @@ public class Controle {
         
         telaFuncionario = new JPanelAFuncionario(this);
         
+        telaPeca = new JPanelPeca(this);
+        
+        telaCliente = new JPanelCliente(this);
+        
         jframe.addTela(telaAutenticacao, "tela_autenticacao");
         
         jframe.addTela(telaHome, "tela_home"); //adiciona tela home (só mostra se aprova login)
         
         jframe.addTela(telaFuncionario, "tela_funcionario");
         
+        jframe.addTela(telaPeca, "tela_peca");
+        
+        jframe.addTela(telaCliente, "listagem_cliente");
+        
         jframe.showTela("tela_autenticacao");
-        
-      
-        
-      
         
         jframe.setVisible(true); //mostrando o JFrame
     }
@@ -96,10 +104,17 @@ public class Controle {
         
          if(nomeTela.equals("tela_funcionario")){
              
-            telaFuncionario.showTela("tela_funcionario_listagem");               
+            telaFuncionario.showTela("tela_funcionario_listagem");
+            
+         }else if(nomeTela.equals("tela_peca")){
+             
+            telaPeca.showTela("tela_peca_listagem");
+         } else if (nomeTela.equals("listagem_cliente")){
+             
+             telaCliente.showTela("tela_cliente_listagem");
          }
          
          jframe.showTela(nomeTela);   
-    }
+    } 
     
 }

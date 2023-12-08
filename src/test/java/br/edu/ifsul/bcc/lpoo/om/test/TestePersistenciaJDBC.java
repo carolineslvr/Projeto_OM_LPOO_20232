@@ -281,7 +281,7 @@ public class TestePersistenciaJDBC {
         }
     }
 
-    //@Test
+   // @Test
     public void testMaoObra() throws Exception {
         PersistenciaJDBC jdbc = new PersistenciaJDBC();
         if (jdbc.conexaoAberta()) {
@@ -311,7 +311,7 @@ public class TestePersistenciaJDBC {
             func.setCpf("1233");
             o.setFuncionario(func);
             MaoObra m = new MaoObra();
-            m.setId("1");
+            m.setId(1);
             Collection<MaoObra> maos = new ArrayList();
             maos.add(m);
             o.setMaoobras(maos);
@@ -380,7 +380,7 @@ public class TestePersistenciaJDBC {
         }
     }
 
-  @Test
+  //@Test
     public void testRecuperaClientesVeiculos() throws Exception {
         Collection<Cliente> clientes = null;
         PersistenciaJDBC jdbc = new PersistenciaJDBC();

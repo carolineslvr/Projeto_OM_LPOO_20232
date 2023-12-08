@@ -21,11 +21,12 @@ public class PersistenciaJPA implements InterfacePersistencia{
     public EntityManager entity;            //gerenciador de entidades JPA
 
 
+
     public PersistenciaJPA() {
         
         //parametro: é o nome da unidade de persistencia (Persistence Unit)
         factory = Persistence.createEntityManagerFactory("pu_db_om_lpoo_20232");
-        entity = factory.createEntityManager(); 
+        entity = factory.createEntityManager();
         
     }
 

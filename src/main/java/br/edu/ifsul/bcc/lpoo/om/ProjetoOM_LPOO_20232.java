@@ -37,5 +37,22 @@ public class ProjetoOM_LPOO_20232 {
         //cpf: 12345678912
         //senha: 123456
       
+        //primeiro criar tela geral
+        //criar tela listagem
+        //criar tela formulario
+        //chamar telas formulario e listagem na tela geral
+        //chamar controle na tela geral
+        //ajustar construtor tela geral
+        //colocar metodo show tela na tela principal echamar listagem
+        
+        //NO CONTROLE
+        //instanciar tela geral
+        //no initcomponents adicionar essa tela geral
+        //no show tela colocar se for a tela geral chamar listagem
+        
+        //no MENU 
+        //criar novo item para chamar tela JMenuItem
+        //configurar item - criar evento de acao e adicionar ao menu
+        //no teste de actionlistener do menu add item novo criado
     }
 }
